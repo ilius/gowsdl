@@ -53,7 +53,7 @@ func TestClient_Call(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		xml.NewDecoder(r.Body).Decode(pingRequest)
 		rsp := `<?xml version="1.0" encoding="utf-8"?>
-		<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 			<soap:Body>
 				<PingResponse xmlns="http://example.com/service.xsd">
 					<PingResult>
@@ -329,7 +329,7 @@ func Test_Client_FaultDefault(t *testing.T) {
 				xml.NewDecoder(r.Body).Decode(pingRequest)
 				rsp := fmt.Sprintf(`
 <?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<soap:Body>
 		<soap:Fault>
 			<faultcode>soap:Server</faultcode>
@@ -803,7 +803,7 @@ func TestHTTPError(t *testing.T) {
 			name:         "should not error if server returns 200",
 			responseCode: http.StatusOK,
 			responseBody: `<?xml version="1.0" encoding="utf-8"?>
-							<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+							<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 								<soap:Body>
 									<PingResponse xmlns="http://example.com/service.xsd">
 										<PingResult>

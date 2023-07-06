@@ -23,7 +23,7 @@ type SOAPDecoder interface {
 }
 
 type SOAPEnvelopeResponse struct {
-	XMLName     xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+	XMLName     xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Envelope"`
 	Header      *SOAPHeaderResponse
 	Body        SOAPBodyResponse
 	Attachments []MIMEMultipartAttachment `xml:"attachments,omitempty"`
@@ -97,7 +97,7 @@ Loop:
 		case xml.StartElement:
 			if consumed {
 				return xml.UnmarshalError("Found multiple elements inside SOAP body; not wrapped-document/literal WS-I compliant")
-			} else if se.Name.Space == "http://schemas.xmlsoap.org/soap/envelope/" && se.Name.Local == "Fault" {
+			} else if se.Name.Space == "http://www.w3.org/2003/05/soap-envelope" && se.Name.Local == "Fault" {
 				b.Content = nil
 
 				b.faultOccurred = true
@@ -153,7 +153,7 @@ type FaultError interface {
 }
 
 type SOAPFault struct {
-	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
+	XMLName xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Fault"`
 
 	Code   string     `xml:"faultcode,omitempty"`
 	String string     `xml:"faultstring,omitempty"`
@@ -186,11 +186,11 @@ const (
 	WssNsWSU        string = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 	WssNsType       string = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
 	mtomContentType string = `multipart/related; start-info="application/soap+xml"; type="application/xop+xml"; boundary="%s"`
-	XmlNsSoapEnv    string = "http://schemas.xmlsoap.org/soap/envelope/"
+	XmlNsSoapEnv    string = "http://www.w3.org/2003/05/soap-envelope"
 )
 
 type WSSSecurityHeader struct {
-	XMLName   xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ wsse:Security"`
+	XMLName   xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope wsse:Security"`
 	XmlNSWsse string   `xml:"xmlns:wsse,attr"`
 
 	MustUnderstand string `xml:"mustUnderstand,attr,omitempty"`

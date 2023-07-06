@@ -115,12 +115,12 @@ var wsdl = `<?xml version="1.0" encoding="utf-8"?>
 var WSDLUndefinedError = errors.New("Server was unable to process request. --> Object reference not set to an instance of an object.")
 
 type SOAPEnvelopeRequest struct {
-	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+	XMLName xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Envelope"`
 	Body    SOAPBodyRequest
 }
 
 type SOAPBodyRequest struct {
-	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
+	XMLName xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Body"`
 
 	GetInfo *GetInfo `xml:,omitempty`
 }
@@ -136,7 +136,7 @@ type SOAPEnvelopeResponse struct {
 
 func NewSOAPEnvelopResponse() *SOAPEnvelopeResponse {
 	return &SOAPEnvelopeResponse{
-		PrefixSoap: "http://schemas.xmlsoap.org/soap/envelope/",
+		PrefixSoap: "http://www.w3.org/2003/05/soap-envelope",
 		PrefixXsd:  "http://www.w3.org/2001/XMLSchema",
 		PrefixXsi:  "http://www.w3.org/2001/XMLSchema-instance",
 	}
@@ -182,7 +182,7 @@ func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request)
 	defer func() {
 		if r := recover(); r != nil {
 			resp.Body.Fault = &Fault{}
-			resp.Body.Fault.Space = "http://schemas.xmlsoap.org/soap/envelope/"
+			resp.Body.Fault.Space = "http://www.w3.org/2003/05/soap-envelope"
 			resp.Body.Fault.Code = "soap:Server"
 			resp.Body.Fault.Detail = fmt.Sprintf("%v", r)
 			resp.Body.Fault.String = fmt.Sprintf("%v", r)
