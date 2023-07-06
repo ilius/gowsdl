@@ -190,11 +190,6 @@ func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request)
 		xml.NewEncoder(w).Encode(resp)
 	}()
 
-	header := r.Header.Get("Content-Type")
-	if strings.Index(header, "application/soap+xml") >= 0 {
-		panic("Could not find an appropriate Transport Binding to invoke.")
-	}
-
 	err := xml.NewDecoder(r.Body).Decode(service)
 	if err != nil {
 		panic(err)
