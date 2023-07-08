@@ -66,7 +66,7 @@ type SOAPBodyResponse struct { ` + `
 		{{$requestType := findType .Input.Message | replaceReservedWords | makePublic}}
 		{{$requestTypeSource := findType .Input.Message | replaceReservedWords }}
 func (service *SOAPBodyRequest) {{$requestType}}Func(request *{{$requestType}}) (*{{$responseType}}, error) {
-	return nil, WSDLUndefinedError
+    return &{{$responseType}}{}, nil
 }
 	{{end}}
 {{end}}
@@ -74,11 +74,6 @@ func (service *SOAPBodyRequest) {{$requestType}}Func(request *{{$requestType}}) 
 
 func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/xml; charset=utf-8")
-	val := reflect.ValueOf(&service.Body).Elem()
-	n := val.NumField()
-	var field reflect.Value
-	var name string
-	find := false
 
 	if r.Method == http.MethodGet {
 		w.Write([]byte(wsdl))
@@ -102,35 +97,20 @@ func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request)
 		panic(err)
 	}
 
-	for i := 0; i < n; i++ {
-		field = val.Field(i)
-		name = val.Type().Field(i).Name
-		if field.Kind() != reflect.Ptr {
-			continue
+	switch {
+	{{range .}}
+	{{range .Operations}}
+		{{$requestType := findType .Input.Message | replaceReservedWords | makePublic}} ` + `
+	case service.Body.{{$requestType}} != nil:
+		resRes, err := service.Body.{{$requestType}}Func(service.Body.{{$requestType}})
+		if err != nil {
+			panic(err)
 		}
-		if field.IsNil() {
-			continue
-		}
-		if field.IsValid() {
-			find = true
-			break
-		}
-	}
-
-	if !find {
+		resp.Body.{{$requestType}} = resRes
+	{{end}}
+	{{end}}
+	default:
 		panic(WSDLUndefinedError)
-	} else {
-		m := val.Addr().MethodByName(name + "Func")
-		if !m.IsValid() {
-			panic(WSDLUndefinedError)
-		}
-
-		vals := m.Call([]reflect.Value{field})
-		if vals[1].IsNil() {
-			reflect.ValueOf(&resp.Body).Elem().FieldByName(name).Set(vals[0])
-		} else {
-			panic(vals[1].Interface())
-		}
 	}
 
 }
