@@ -375,6 +375,7 @@ func (g *GoWSDL) genHeader() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: add go:generate header
 
 	return data.Bytes(), nil
 }
@@ -395,6 +396,7 @@ func (g *GoWSDL) genServerHeader() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: add go:generate header
 
 	return data.Bytes(), nil
 }
