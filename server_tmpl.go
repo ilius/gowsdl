@@ -65,7 +65,7 @@ type SOAPBodyResponse struct { ` + `
 		{{$responseType := findType .Output.Message | replaceReservedWords | makePublic}}
 		{{$requestType := findType .Input.Message | replaceReservedWords | makePublic}}
 		{{$requestTypeSource := findType .Input.Message | replaceReservedWords }}
-func (service *SOAPBodyRequest) {{$requestType}}Func(request *{{$requestType}}) (*{{$responseType}}, error) {
+func (service *SOAPEnvelopeRequest) {{$requestType}}Func(request *{{$requestType}}) (*{{$responseType}}, error) {
     return &{{$responseType}}{}, nil
 }
 	{{end}}
@@ -102,7 +102,7 @@ func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request)
 	{{range .Operations}}
 		{{$requestType := findType .Input.Message | replaceReservedWords | makePublic}} ` + `
 	case service.Body.{{$requestType}} != nil:
-		resRes, err := service.Body.{{$requestType}}Func(service.Body.{{$requestType}})
+		resRes, err := service.{{$requestType}}Func(service.Body.{{$requestType}})
 		if err != nil {
 			panic(err)
 		}

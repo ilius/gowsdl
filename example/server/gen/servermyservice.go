@@ -183,7 +183,7 @@ type SOAPBodyResponse struct {
 	GetInfo *GetInfoResponse `xml:",omitempty"`
 }
 
-func (service *SOAPBodyRequest) GetInfoFunc(request *GetInfo) (*GetInfoResponse, error) {
+func (service *SOAPEnvelopeRequest) GetInfoFunc(request *GetInfo) (*GetInfoResponse, error) {
 	return &GetInfoResponse{}, nil
 }
 
@@ -215,7 +215,7 @@ func (service *SOAPEnvelopeRequest) call(w http.ResponseWriter, r *http.Request)
 	switch {
 
 	case service.Body.GetInfo != nil:
-		resRes, err := service.Body.GetInfoFunc(service.Body.GetInfo)
+		resRes, err := service.GetInfoFunc(service.Body.GetInfo)
 		if err != nil {
 			panic(err)
 		}
